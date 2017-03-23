@@ -46,10 +46,10 @@ No arquivo `config/app.php` adcione o service provider `Artesaos\Warehouse\Wareh
 ## Como usar
 
 Warehouse v2 é um pacote base, ele implementa o básico sem nenhuma regra de negócio definida.
-Há duas classes base: `BaseRepository` e `AbstractCrudRepository`
+Há duas classes base: `Repository` e `CrudRepository`
 
-### BaseRepository
-Esta classe implementa o contrato `BaseRepository`, que possui três assinaturas:
+### Repository
+Esta classe implementa o contrato `RepositoryContract`, que possui três assinaturas:
 
 ```php
  /**
@@ -88,20 +88,27 @@ Esta classe implementa o contrato `BaseRepository`, que possui três assinaturas
 public function lists($column, $key = null);
 ```
 
-Já na implementação, `BaseRepository` disponibiliza dois métodos protegidos `newQuery()` e `doQuery($query = null, $take = 15, $paginate = true)`. Eles são amplamente usados nos repositórios.
+Já na implementação, `Repository` disponibiliza dois métodos publicos `newQuery()` e `doQuery($query = null, $take = 15, $paginate = true)`. Eles são amplamente usados nos repositórios.
 
 #### newQuery
 
 *newQuery* retorna um objeto [QueryBuilder](https://github.com/laravel/framework/blob/5.1/src/Illuminate/Database/Eloquent/Builder.php) do eloquent, à partir da propriedade `modelClass`.
 
 ```php
-protected function newQuery()
+public function newQuery()
 {
     return app()->make($this->modelClass)->newQuery();
 }
 ```
 
 > Essa propriedade precisa ser definida em todos as classes repositório
+```php
+    
+class ProductRepository extends CrudRepository
+{
+    protected $modelClass = Product::class;
+}
+```
 
 #### doQuery
 
